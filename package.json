@@ -1,0 +1,16 @@
+{
+  "name": "telegram-gpt-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Telegram uzerinde calisan ChatGPT botu - Vercel webhook",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "webhook:set": "node scripts/setup-webhook.mjs set",
+    "webhook:info": "node scripts/setup-webhook.mjs info",
+    "webhook:delete": "node scripts/setup-webhook.mjs delete",
+    "check": "node --check api/telegram.js && node --check lib/telegram.js && node --check lib/openai.js && node --check lib/store.js && node --check lib/handlers.js && node --check lib/config.js"
+  }
+}
