@@ -146,7 +146,7 @@ Botun kişiliğini `SYSTEM_PROMPT` ile değiştirebilirsin:
 SYSTEM_PROMPT=Sen alaycı ama yardımsever bir asistansın. Kısa cevap ver, ara sıra espri yap.
 ```
 
-Diğer ayarlanabilir değişkenler: `OPENAI_MODEL`, `OPENAI_TRANSCRIBE_MODEL`, `OPENAI_IMAGE_MODEL`, `MAX_HISTORY_MESSAGES`. Hepsi [`.env.example`](.env.example) dosyasında açıklanmış.
+Diğer ayarlanabilir değişkenler: `OPENAI_MODEL`, `OPENAI_TRANSCRIBE_MODEL`, `OPENAI_IMAGE_MODEL`, `OPENAI_IMAGE_QUALITY`, `MAX_HISTORY_MESSAGES`. Hepsinin varsayılanı zaten makul — hiçbirini `.env`'e yazmak zorunda değilsin. Ne işe yaradıkları ve maliyete etkileri [`.env.example`](.env.example) dosyasında açıklanmış.
 
 ---
 
@@ -165,6 +165,23 @@ supabase/schema.sql      Veritabanı tabloları
 
 ## Maliyet
 
-Vercel Hobby ve Supabase Free planları bu kullanım için yeterli. Tek gerçek masraf OpenAI API kullanımı — kişisel kullanımda genelde ayda birkaç dolar. Görsel üretme mesaj başına belirgin şekilde daha pahalı olduğu için `/gorsel` komutunu ölçülü kullan.
+Vercel Hobby ve Supabase Free planları bu kullanım için yeterli. Tek gerçek masraf OpenAI API kullanımı.
 
-Kullanımını [platform.openai.com/usage](https://platform.openai.com/usage) adresinden takip edebilir, aynı yerden aylık harcama limiti koyabilirsin.
+Varsayılan ayarlarla (`gpt-5.6-luna`, `MAX_HISTORY_MESSAGES=10`) **5 dolar** kabaca şuna denk geliyor:
+
+| İşlem | 5 dolar ile yaklaşık |
+|---|---|
+| Yazılı mesaj (veya telefonun diktesiyle yazılan) | ~9.600 |
+| Fotoğraf gönderip yorumlatmak | ~6.000 |
+| Sesli mesaj (10 sn) | ~5.000 |
+| Sesli mesaj (30 sn) | ~2.500 |
+| `/gorsel` — düşük kalite | ~1.000 |
+| `/gorsel` — orta kalite | ~120 |
+
+Birkaç pratik not:
+
+- **Dikte bedava.** Telefonun kendi mikrofon tuşuyla yazdırırsan mesaj Telegram'a düz yazı olarak gider ve ses çözümleme hiç devreye girmez. Ses kaydı atmak yaklaşık 3 kat daha pahalı — ama uzun ya da karışık anlatımlarda model ham sesi duyduğu için daha isabetli olabiliyor.
+- **`/gorsel` ölçülü kullanılmalı.** Düşük kalitede bile bir görsel ~200 mesaja bedel. Varsayılanı `low` yaptık; hiç kullanmayacaksan zaten önemsiz.
+- **Krediler 1 yıl sonra doluyor.** OpenAI'nin ön ödemeli kredileri [satın alma tarihinden bir yıl sonra geçersiz oluyor](https://openai.com/policies/service-credit-terms/) ve iade edilmiyor. Günde 25 mesajın altında kalıyorsan 5 doları bir yılda bitiremezsin — o yüzden çok yüklemenin anlamı yok, bitince tekrar yükle.
+
+**İki ayarı mutlaka yap:** OpenAI panelinde **auto-recharge'ı kapat** (yoksa bakiye bitince karttan otomatik çeker) ve **aylık harcama limiti koy**. Kullanımını [platform.openai.com/usage](https://platform.openai.com/usage) adresinden takip edebilirsin.
